@@ -1,0 +1,139 @@
+---
+title: "Project 2: Explore Bikeshare Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Data and Function Preparation Step
+
+```{r }
+ny = read.csv('new-york-city.csv')
+chi = read.csv('chicago.csv')
+wash = read.csv('washington.csv')
+
+# Add Gender, Birth Year, and City to the Washington DC data
+wash <- wash %>% mutate(Gender=NA, Birth.Year=NA, City="Washington DC")
+
+# Add City to the Chicago and New York files
+chi <- chi %>% mutate(City="Chicago")
+ny <- ny %>% mutate(City="New York")
+
+# Combine the Washington, Chicago, and New York files together
+wcn_all <- bind_rows(wash, chi, ny)
+
+# Function to convert seconds to minutes
+secs_to_mins <- function(x)
+{
+  return(x/60)
+}
+```
+
+## --------------------------------------------------------------------------------------
+## Question 1 - What is the most common month for bicycle rentals?
+## --------------------------------------------------------------------------------------
+```{r}
+# Create a data frame with only City and Starting Rental Time
+q1_data <- wcn_all %>% select(City, X, Start.Time)
+
+# Add an attribute with the month for each rental
+q1_data <- q1_data %>% mutate(Start.Month=strftime(Start.Time,"%m")) 
+
+```
+
+```{r, warning=F, message=F}
+# Show summary of top rental counts
+q1_data %>%
+  group_by(City, Start.Month) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count)) %>% head(8) %>%
+  knitr::kable()
+```
+
+## Plot
+
+```{r, warning=F, message=F}
+ggplot(aes(x=Start.Month, fill=City), data=q1_data) +
+  geom_histogram(stat="count") +
+  facet_wrap(~City) +
+  labs(x="Month", y="Total Rentals", title="Bike Rentals by City", subtitle="January-June 2017")
+```
+
+## Answer
+
+Based on the data, June is the most popular month for bicycle rentals.  Chicago, New York, and Washington DC had approximate total rentals of 98,081, 76,022, and 68,339 respectively.  The difference between the highest month vs the next highest month was most dramatic in Chicago.
+
+
+## --------------------------------------------------------------------------------------
+## Question 2 - What is the average travel time for users in different cities?
+## --------------------------------------------------------------------------------------
+```{r}
+# Create a data frame with only City and Starting Rental Time
+q2_data <- wcn_all %>% select(City, X, Trip.Duration)
+
+# Add an attribute with the month for each rental
+q2_data <- q2_data %>% mutate(Trip.Minutes=floor(Trip.Duration/60))
+
+city_data = data.frame(City.Labels=c("Chicago","Washington DC","New York"),
+                       City.Mean=c(mean(secs_to_mins(chi$Trip.Duration)),
+                                   mean(wash$Trip.Duration/60),
+                                   mean(ny$Trip.Duration/60)),
+                       City.Position=c(37000, 30000, 50000),
+                       City.Color=c("salmon", "deepskyblue3","green3"))
+
+```
+
+```{r}
+# Show mean trip duration by city in table format
+city_data[1:2]%>%knitr::kable()
+```
+
+## Plot
+
+```{r, warning=F, message=F}
+# Build histogram showing the frequency of trips based on trip duration.
+ggplot(aes(x=Trip.Minutes, fill=City), data=q2_data, city_data) +
+  geom_histogram(stat="count") +
+  scale_x_continuous(limits = c(0, 75), breaks = seq(0,75,5)) +
+  labs(x="Trip Duration (minutes)", y="Number of Trips", title="Bicycle Trips by City", subtitle="January-June 2017") +
+  geom_vline(xintercept=city_data$City.Mean, linetype="dashed", size=0.25, color=city_data$City.Color) +
+  annotate("Text", label=city_data$City.Labels, angle=270,
+    x = city_data$City.Mean, y=city_data$City.Position, size = 4, color = city_data$City.Color)
+```
+
+## Answer
+
+New York has the shortest with an average of 14.99474 minutes.  Chicago is next at 15.60399 minutes.  Washington DC has the longest average at 20.62133 minutes.  Approximately 16,000 of 900,000 observations greater than 75 minutes have been excluded from the plot but were considered in calculating the average by city. 
+
+
+## --------------------------------------------------------------------------------------
+## Question 3 - What are the earliest, most recent, most common year of birth?
+## --------------------------------------------------------------------------------------
+```{r}
+# Create a data frame with only City and Birth Year
+q3_data <- wcn_all %>% select(City, X, Birth.Year)
+
+```
+
+## Plot
+
+```{r, warning=F, message=F}
+# Show summary statistics regarding birth year of users
+summary(subset(q3_data$Birth.Year,!is.na(q3_data$Birth.Year)))
+
+# Build histogram showing the frequency of trips based on trip duration.
+ggplot(aes(x = Birth.Year), data = subset(q3_data,(!is.na(Birth.Year)))) +
+  geom_boxplot() +
+  facet_wrap(~City) +
+  scale_x_continuous(limits = c(1965, 2010), breaks = seq(1965,2010,10)) +
+  xlab('Birth Year') +
+  coord_flip()
+```
+
+## Answer
+The earliest birth year from the combined Chicago and New York observation files (Washington DC data was not available) was 1885 but is most likely not accurate as this would reflect a user of age 132.  The birth year of the most recent user is 2016 which is also not reflective or reality.  THe 1st and 3rd quartiles are a better approximation of the earliest (1972) and latest (1988) birth years.  The included boxplot shows that New York users tend are older on average than Chicago users.  
