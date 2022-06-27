@@ -7,7 +7,10 @@ June 27, 2022
 Programming for Data Science with R Nanodegree Program - Project 2
 
 ### Description
-Project contains the R code and data files to analyze BikeShare data.
+Project contains the R code and data files to analyze BikeShare data.  The R code produces an markdown file that addresses the following questions:
+1.  What is the most common month for bicycle rentals?
+2.  What is the average travel time for users in different cities?
+3.  What are the earliest, most recent, most common year of birth?
 
 ### Files used
 MikeCarter-Project2.Rmd : R Code  (used to generate html output)
