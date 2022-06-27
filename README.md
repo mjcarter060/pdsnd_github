@@ -12,6 +12,8 @@ Project contains the R code and data files to analyze BikeShare data.  The R cod
 2.  What is the average travel time for users in different cities?
 3.  What are the earliest, most recent, most common year of birth?
 
+This project was submitted for Udacity review on June 16, 2022. 
+
 ### Files used
 MikeCarter-Project2.Rmd : R Code  (used to generate html output)
 new-york-city.csv : BikeShare rental data for New York city
