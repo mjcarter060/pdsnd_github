@@ -7,7 +7,7 @@ June 27, 2022
 Programming for Data Science with R Nanodegree Program - Project 2
 
 ### Description
-Describe what your project is about and what it does
+Project contains the R code and data files to analyze BikeShare data.
 
 ### Files used
 Include the files used
