@@ -10,7 +10,10 @@ Programming for Data Science with R Nanodegree Program - Project 2
 Project contains the R code and data files to analyze BikeShare data.
 
 ### Files used
-Include the files used
+MikeCarter-Project2.Rmd : R Code  (used to generate html output)
+new-york-city.csv : BikeShare rental data for New York city
+washington.csv : BikeShare rental data for Washington DC
+chicago.csv : BikeShare rental data for Chicago
 
 ### Credits
-It's important to give proper credit. Add links to any repo that inspired you or blogposts you consulted.
+Data was acquired by Udacity as part of the Data "Science with R Nanodegree Program".
