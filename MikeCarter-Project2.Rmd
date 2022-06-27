@@ -28,9 +28,9 @@ ny <- ny %>% mutate(City="New York")
 wcn_all <- bind_rows(wash, chi, ny)
 
 # Function to convert seconds to minutes
-secs_to_mins <- function(x)
+secs_to_mins <- function(seconds)
 {
-  return(x/60)
+  return(seconds/60)
 }
 ```
 
@@ -42,7 +42,7 @@ secs_to_mins <- function(x)
 q1_data <- wcn_all %>% select(City, X, Start.Time)
 
 # Add an attribute with the month for each rental
-q1_data <- q1_data %>% mutate(Start.Month=strftime(Start.Time,"%m")) 
+q1_data <- q1_data %>% mutate(Start.Month=strftime(Start.Time,"%m"))
 
 ```
 
@@ -108,7 +108,7 @@ ggplot(aes(x=Trip.Minutes, fill=City), data=q2_data, city_data) +
 
 ## Answer
 
-New York has the shortest with an average of 14.99474 minutes.  Chicago is next at 15.60399 minutes.  Washington DC has the longest average at 20.62133 minutes.  Approximately 16,000 of 900,000 observations greater than 75 minutes have been excluded from the plot but were considered in calculating the average by city. 
+New York has the shortest with an average of 14.99474 minutes.  Chicago is next at 15.60399 minutes.  Washington DC has the longest average at 20.62133 minutes.  Approximately 16,000 of 900,000 observations greater than 75 minutes have been excluded from the plot but were considered in calculating the average by city.
 
 
 ## --------------------------------------------------------------------------------------
