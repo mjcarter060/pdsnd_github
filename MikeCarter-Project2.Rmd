@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Data and Function Preparation Step
+## The below code reads takes data from New York City, Chicago, and
+##     Washington DC and combines it into a single file with the same fields.
 
 ```{r }
 ny = read.csv('new-york-city.csv')
